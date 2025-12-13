@@ -19,7 +19,15 @@ class ItemController extends Controller
             $query->where('user_id', '!=', $user->id);
         }
 
+        if ($keyword = $request->query('keyword')) {
+            $query->where('name', 'LIKE', "%{$keyword}%");
+        }
+
         if ($tab === 'mylist' && $user) {
+            if (!$user) {
+                return redirect()->route('login');
+            }
+            
             $query->whereHas('likes', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             });

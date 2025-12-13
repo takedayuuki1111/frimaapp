@@ -14,8 +14,8 @@ class ExhibitionRequest extends FormRequest
     public function rules()
     {
         return [
-            'item_image' => 'required|image|mimes:jpeg,png', // 画像必須
-            'categories' => 'required|array|min:1',          // カテゴリ（配列）
+            'item_image' => 'required|image|mimes:jpeg,png', 
+            'categories' => 'required|array|min:1', 
             'condition_id' => 'required|exists:conditions,id',
             'name' => 'required|string|max:255',
             'description' => 'required|string|max:255',

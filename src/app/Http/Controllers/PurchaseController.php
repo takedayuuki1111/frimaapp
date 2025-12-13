@@ -7,7 +7,9 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\PurchaseRequest;
 use App\Models\Item;
 use App\Models\SoldItem;
-use App\Http\Requests\AddressRequest; 
+use App\Http\Requests\AddressRequest;
+use Stripe\Stripe;
+use Stripe\Checkout\Session;
 
 class PurchaseController extends Controller
 {
@@ -27,37 +29,78 @@ class PurchaseController extends Controller
 
         return view('purchase.create', compact('item', 'user'));
     }
-
+    
     public function store(PurchaseRequest $request, $item_id)
+    {
+        $item = Item::findOrFail($item_id);
+
+        if ($request->payment_method === 'card') {
+            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+            $session = Session::create([
+                'payment_method_types' => ['card'],
+                'line_items' => [[
+                    'price_data' => [
+                        'currency' => 'jpy',
+                        'product_data' => [
+                            'name' => $item->name,
+                        ],
+                        'unit_amount' => $item->price,
+                    ],
+                    'quantity' => 1,
+                ]],
+                'mode' => 'payment',
+                'success_url' => route('purchase.success', ['item_id' => $item->id]),
+                'cancel_url' => route('purchase.cancel', ['item_id' => $item->id]),
+            ]);
+
+            return redirect($session->url);
+        }
+
+        if ($request->payment_method === 'konbini') {
+            $this->processPurchase($item->id, 'konbini');
+            return redirect()->route('index');
+        }
+
+        return redirect()->route('index');
+    }
+
+    public function success($item_id)
+    {
+        $this->processPurchase($item_id, 'card');
+
+        return redirect()->route('index');
+    }
+
+    public function cancel($item_id)
+    {
+        return redirect()->route('purchase.create', ['item_id' => $item_id]);
+    }
+
+    private function processPurchase($item_id, $method)
     {
         SoldItem::create([
             'user_id' => Auth::id(),
             'item_id' => $item_id,
         ]);
-        return redirect()->route('index');
     }
 
-    // 住所変更画面表示
     public function editAddress($item_id)
     {
         $item = Item::findOrFail($item_id);
-        // 商品IDを渡して、更新後に戻れるようにする
         return view('purchase.address', compact('item_id'));
     }
 
-    // 住所変更処理
     public function updateAddress(AddressRequest $request, $item_id)
     {
         $user = Auth::user();
-        
-        // ユーザーの住所情報を更新
+    
         $user->update([
             'postal_code' => $request->postal_code,
             'address' => $request->address,
             'building_name' => $request->building_name,
         ]);
 
-        // 商品購入画面へ戻る
         return redirect()->route('purchase.create', ['item_id' => $item_id]);
     }
 }

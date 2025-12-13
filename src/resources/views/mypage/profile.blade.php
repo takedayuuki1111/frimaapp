@@ -7,7 +7,6 @@
     <form action="{{ route('mypage.update') }}" method="post" enctype="multipart/form-data" class="profile-form">
         @csrf
 
-        {{-- アイコン画像 --}}
         <div class="profile-icon-section">
             <div class="icon-preview" id="icon-preview">
                 @if($user->avatar_image)
@@ -25,7 +24,6 @@
             <p class="error-message">{{ $message }}</p>
         @enderror
 
-        {{-- ユーザー名 --}}
         <div class="form-group">
             <label class="form-label">ユーザー名</label>
             <input type="text" name="name" class="form-input" value="{{ old('name', $user->name) }}">
@@ -34,7 +32,6 @@
             @enderror
         </div>
 
-        {{-- 郵便番号 --}}
         <div class="form-group">
             <label class="form-label">郵便番号</label>
             <input type="text" name="postal_code" class="form-input" value="{{ old('postal_code', $user->postal_code) }}">
@@ -43,7 +40,6 @@
             @enderror
         </div>
 
-        {{-- 住所 --}}
         <div class="form-group">
             <label class="form-label">住所</label>
             <input type="text" name="address" class="form-input" value="{{ old('address', $user->address) }}">
@@ -52,7 +48,6 @@
             @enderror
         </div>
 
-        {{-- 建物名 --}}
         <div class="form-group">
             <label class="form-label">建物名</label>
             <input type="text" name="building_name" class="form-input" value="{{ old('building_name', $user->building_name) }}">
@@ -63,7 +58,6 @@
 </div>
 
 <script>
-    // アイコンプレビュー
     document.getElementById('avatar_image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const previewBox = document.getElementById('icon-preview');

@@ -12,10 +12,9 @@ class ItemSeeder extends Seeder
 {
     public function run()
     {
-        // 出品者ユーザーを取得（UserSeederで作成した最初のユーザー）
+
         $user = User::first();
-        
-        // 商品データ一覧（CSVの内容）
+
         $items = [
             [
                 'name' => '腕時計',
@@ -38,7 +37,7 @@ class ItemSeeder extends Seeder
             [
                 'name' => '玉ねぎ3束',
                 'price' => 300,
-                'brand_name' => null, // ブランドなし
+                'brand_name' => null, 
                 'description' => '新鮮な玉ねぎ3束のセット',
                 'img_url' => 'https://coachtech-matter.s3.ap-northeast-1.amazonaws.com/image/iLoveIMG+d.jpg',
                 'condition_name' => 'やや傷や汚れあり',
@@ -110,10 +109,8 @@ class ItemSeeder extends Seeder
         ];
 
         foreach ($items as $itemData) {
-            // コンディション名をIDに変換
             $condition = Condition::where('condition', $itemData['condition_name'])->first();
-            
-            // 商品を作成
+
             $item = Item::create([
                 'user_id' => $user->id,
                 'condition_id' => $condition->id,
@@ -124,8 +121,6 @@ class ItemSeeder extends Seeder
                 'img_url' => $itemData['img_url'],
             ]);
 
-            // カテゴリーを中間テーブルに保存
-            // カテゴリー名からIDを取得してsync
             $categoryIds = Category::whereIn('content', $itemData['categories'])->pluck('id')->toArray();
             $item->categories()->sync($categoryIds);
         }

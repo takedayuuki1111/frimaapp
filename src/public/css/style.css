@@ -1,11 +1,7 @@
 @charset "UTF-8";
 
-/* =========================================
-   変数定義 & ベーススタイル
-   ========================================= */
 :root {
     --primary-color: #ff3333;
-    /* アプリのメインカラー（赤） */
     --text-color: #333;
     --bg-color: #fff;
     --bg-gray: #f5f5f5;
@@ -28,11 +24,6 @@ body {
     padding: 20px;
 }
 
-/* =========================================
-   共通コンポーネント (ボタン・フォーム)
-   ========================================= */
-
-/* 赤いメインボタンの共通スタイル */
 .auth-form__btn,
 .btn-purchase,
 .btn-sell-submit,
@@ -49,7 +40,6 @@ body {
     border-radius: 4px;
     font-weight: bold;
     font-size: 16px;
-    /* 統一 */
     text-align: center;
     text-decoration: none;
     cursor: pointer;
@@ -67,7 +57,6 @@ body {
     opacity: 0.8;
 }
 
-/* 共通入力フォームスタイル */
 .auth-form__input,
 .comment-input,
 .form-input,
@@ -83,16 +72,12 @@ body {
     background-color: #fff;
 }
 
-/* エラーメッセージ */
 .error-message {
     color: var(--primary-color);
     font-size: 12px;
     margin-top: 5px;
 }
 
-/* =========================================
-   ヘッダー
-   ========================================= */
 .header {
     background-color: #000;
     color: #fff;
@@ -120,6 +105,8 @@ body {
     padding: 8px;
     border-radius: 4px;
     border: none;
+    background-color: #fff;
+    color: #333;
 }
 
 .header__nav-list {
@@ -156,9 +143,6 @@ body {
     font-weight: bold;
 }
 
-/* =========================================
-   認証画面 (Login / Register)
-   ========================================= */
 .auth-page {
     max-width: 400px;
     margin: 60px auto;
@@ -194,9 +178,6 @@ body {
     font-size: 14px;
 }
 
-/* =========================================
-   商品一覧 (Top Page)
-   ========================================= */
 .tab-menu {
     display: flex;
     border-bottom: 1px solid var(--border-light);
@@ -279,9 +260,6 @@ body {
     margin: 5px 0 0;
 }
 
-/* =========================================
-   商品詳細 (Detail)
-   ========================================= */
 .item-detail-page {
     padding: 40px 0;
 }
@@ -379,7 +357,6 @@ body {
     cursor: not-allowed;
 }
 
-/* 説明・情報セクション */
 .item-description-section,
 .item-info-section {
     margin-bottom: 40px;
@@ -417,7 +394,6 @@ body {
     margin-right: 5px;
 }
 
-/* コメント欄 */
 .comment-item {
     margin-bottom: 20px;
 }
@@ -476,9 +452,6 @@ body {
     opacity: 1;
 }
 
-/* =========================================
-   購入画面 (Purchase)
-   ========================================= */
 .purchase-page {
     padding: 40px 0;
 }
@@ -581,9 +554,6 @@ body {
     margin-top: 20px;
 }
 
-/* =========================================
-   入力フォーム系 (Sell / Profile / Address)
-   ========================================= */
 .sell-page,
 .profile-edit-page,
 .address-page {
@@ -607,7 +577,6 @@ body {
     margin: 40px 0 20px;
 }
 
-/* 画像アップロード */
 .image-upload-area {
     border: 2px dashed var(--border-color);
     padding: 20px;
@@ -640,7 +609,6 @@ body {
     object-fit: contain;
 }
 
-/* カテゴリーチェックボックス */
 .category-checkboxes {
     display: flex;
     flex-wrap: wrap;
@@ -659,7 +627,6 @@ body {
     margin-right: 5px;
 }
 
-/* フォーム共通マージン */
 .form-group {
     margin-bottom: 25px;
 }
@@ -686,16 +653,12 @@ body {
     padding-left: 30px;
 }
 
-/* 送信ボタンマージン */
 .btn-sell-submit,
 .btn-profile-submit,
 .btn-update-address {
     margin-top: 40px;
 }
 
-/* =========================================
-   マイページ (Mypage)
-   ========================================= */
 .mypage-container {
     max-width: 800px;
     margin: 40px auto;
@@ -752,7 +715,6 @@ body {
     color: #fff;
 }
 
-/* プロフィール編集の画像 */
 .profile-icon-section {
     display: flex;
     align-items: center;

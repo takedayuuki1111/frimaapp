@@ -16,11 +16,12 @@ Route::get('/item/{item_id}', [ItemController::class, 'show'])->name('item.show'
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::prefix('purchase')->group(function () {
         Route::get('/{item_id}', [PurchaseController::class, 'create'])->name('purchase.create');
-
         Route::post('/{item_id}', [PurchaseController::class, 'store'])->name('purchase.store');
         
-        Route::get('/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address.edit');
+        Route::get('/checkout/success/{item_id}', [PurchaseController::class, 'success'])->name('purchase.success');
+        Route::get('/checkout/cancel/{item_id}', [PurchaseController::class, 'cancel'])->name('purchase.cancel');
 
+        Route::get('/address/{item_id}', [PurchaseController::class, 'editAddress'])->name('purchase.address.edit');
         Route::post('/address/{item_id}', [PurchaseController::class, 'updateAddress'])->name('purchase.address.update');
     });
 

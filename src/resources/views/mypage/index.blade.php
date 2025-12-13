@@ -2,8 +2,7 @@
 
 @section('content')
 <div class="mypage-container">
-    
-    {{-- ユーザー情報エリア --}}
+
     <div class="user-profile-header">
         <div class="user-profile-icon">
             @if($user->avatar_image)
@@ -16,13 +15,11 @@
         <a href="{{ route('mypage.edit') }}" class="btn-profile-edit">プロフィールを編集</a>
     </div>
 
-    {{-- タブメニュー --}}
     <div class="tab-menu">
         <a href="/mypage?page=sell" class="tab-item {{ $page === 'sell' ? 'active' : '' }}">出品した商品</a>
         <a href="/mypage?page=buy" class="tab-item {{ $page === 'buy' ? 'active' : '' }}">購入した商品</a>
     </div>
 
-    {{-- 商品リスト（ItemControllerで作ったグリッドと同じ構造） --}}
     <div class="item-grid">
         @foreach ($items as $item)
             <div class="item-card">

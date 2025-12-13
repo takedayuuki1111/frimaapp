@@ -14,7 +14,7 @@ class AddressRequest extends FormRequest
     public function rules()
     {
         return [
-            'postal_code' => 'required|string|max:8', // ハイフンありの想定
+            'postal_code' => 'required|string|max:8', 
             'address' => 'required|string|max:255',
             'building_name' => 'nullable|string|max:255',
         ];

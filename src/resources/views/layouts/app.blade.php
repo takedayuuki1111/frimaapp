@@ -12,18 +12,19 @@
     <header class="header">
         <div class="header__inner">
             <h1 class="header__logo">
-                <a href="/"><img src="{{ asset('images/logo.svg') }}" alt="COACHTECH" class="header__logo-img"></a>
-            </h1>
+                 <h1 class="header__logo">
+                    <a href="/">COACHTECH</a>
+                 </h1>
             
-            {{-- 検索フォーム（要件FN016） --}}
             <form action="/" method="get" class="header__search">
-                <input type="text" name="keyword" placeholder="なにをお探しですか？" class="header__search-input">
+                @csrf
+                <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="なにをお探しですか？" class="header__search-input">
             </form>
 
             <nav class="header__nav">
                 <ul class="header__nav-list">
                     @if (Auth::check())
-                        {{-- ログイン済みユーザー用メニュー --}}
+
                         <li class="header__nav-item">
                             <form action="/logout" method="post">
                                 @csrf
@@ -33,7 +34,7 @@
                         <li class="header__nav-item"><a href="/mypage" class="header__nav-link">マイページ</a></li>
                         <li class="header__nav-item"><a href="/sell" class="header__nav-btn btn-sell">出品</a></li>
                     @else
-                        {{-- 未ログイン（ゲスト）用メニュー --}}
+
                         <li class="header__nav-item"><a href="/login" class="header__nav-link">ログイン</a></li>
                         <li class="header__nav-item"><a href="/register" class="header__nav-link">会員登録</a></li>
                         <li class="header__nav-item"><a href="/sell" class="header__nav-btn btn-sell">出品</a></li>

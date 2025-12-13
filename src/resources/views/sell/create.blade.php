@@ -7,7 +7,6 @@
     <form action="{{ route('sell.store') }}" method="post" enctype="multipart/form-data" class="sell-form">
         @csrf
 
-        {{-- 商品画像 --}}
         <div class="form-section">
             <h3 class="section-title">商品画像</h3>
             <div class="image-upload-area">
@@ -15,7 +14,6 @@
                     画像を選択する
                     <input type="file" name="item_image" id="item_image" class="file-input" accept="image/jpeg, image/png">
                 </label>
-                {{-- プレビュー表示用（JS実装推奨だが今回は簡易実装） --}}
                 <div id="preview-box" class="preview-box"></div>
             </div>
             @error('item_image')
@@ -25,7 +23,6 @@
 
         <h3 class="section-title">商品の詳細</h3>
 
-        {{-- カテゴリー（複数選択） --}}
         <div class="form-group">
             <label class="form-label">カテゴリー</label>
             <div class="category-checkboxes">
@@ -42,7 +39,6 @@
             @enderror
         </div>
 
-        {{-- 商品の状態 --}}
         <div class="form-group">
             <label class="form-label">商品の状態</label>
             <select name="condition_id" class="form-select">
@@ -100,7 +96,6 @@
 </div>
 
 <script>
-    // 簡易的な画像プレビュー
     document.getElementById('item_image').addEventListener('change', function(e) {
         const file = e.target.files[0];
         const previewBox = document.getElementById('preview-box');

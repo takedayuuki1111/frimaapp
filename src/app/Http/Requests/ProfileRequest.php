@@ -14,9 +14,9 @@ class ProfileRequest extends FormRequest
     public function rules()
     {
         return [
-            'avatar_image' => 'nullable|image|mimes:jpeg,png', // 画像は任意（変更しない場合もあるため）
+            'avatar_image' => 'nullable|image|mimes:jpeg,png', 
             'name' => 'required|string|max:255',
-            'postal_code' => 'required|string|max:8', // ハイフン考慮
+            'postal_code' => 'required|string|max:8', 
             'address' => 'required|string|max:255',
             'building_name' => 'nullable|string|max:255',
         ];

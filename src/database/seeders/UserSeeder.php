@@ -8,17 +8,16 @@ use App\Models\User;
 
 class UserSeeder extends Seeder
 {
+    //Todo　テスト作成
     public function run()
     {
-        // テストユーザー
         User::create([
             'name' => 'テストユーザー',
             'email' => 'test@example.com',
             'password' => Hash::make('password123'),
             'email_verified_at' => now(),
         ]);
-        
-        // 追加でダミーユーザーを作成
+
         User::create([
             'name' => 'coachtech太郎',
             'email' => 'taro@example.com',
