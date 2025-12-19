@@ -10,8 +10,9 @@ class ItemController extends Controller
 {
     public function index(Request $request)
     {
-        $tab = $request->query('tab', 'recommend'); 
         $user = Auth::user();
+        $tab = $request->query('tab', 'recommend');
+        $keyword = $request->query('keyword');
 
         $query = Item::query();
 
@@ -19,15 +20,15 @@ class ItemController extends Controller
             $query->where('user_id', '!=', $user->id);
         }
 
-        if ($keyword = $request->query('keyword')) {
+        if ($keyword) {
             $query->where('name', 'LIKE', "%{$keyword}%");
         }
 
-        if ($tab === 'mylist' && $user) {
+        if ($tab === 'mylist') {
             if (!$user) {
                 return redirect()->route('login');
             }
-            
+
             $query->whereHas('likes', function ($q) use ($user) {
                 $q->where('user_id', $user->id);
             });
@@ -35,15 +36,14 @@ class ItemController extends Controller
 
         $items = $query->orderBy('created_at', 'desc')->get();
 
-        return view('index', compact('items', 'tab'));
+        return view('index', compact('items', 'tab', 'keyword'));
     }
 
     public function show($item_id)
     {
-        $item = Item::with(['condition', 'categories', 'comments.user', 'likes'])->findOrFail($item_id);
-        
-        $categories = $item->categories;
+        $item = Item::findOrFail($item_id);
+        $user = Auth::user();
 
-        return view('item.show', compact('item', 'categories'));
+        return view('item.show', compact('item', 'user'));
     }
 }

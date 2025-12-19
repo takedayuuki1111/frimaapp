@@ -39,4 +39,27 @@ class ItemTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($item->name);
     }
+    public function test_user_can_like_item()
+    {
+        $user = User::factory()->create();
+        $item = Item::factory()->create();
+
+        $response = $this->actingAs($user)->post(route('item.like', $item->id));
+        $response->assertRedirect(); 
+
+        $this->assertDatabaseHas('likes', [
+            'user_id' => $user->id,
+            'item_id' => $item->id,
+        ]);
+
+        $response = $this->actingAs($user)->post(route('item.like', $item->id)); 
+    }
+
+    public function test_guest_cannot_like_item()
+    {
+        $item = Item::factory()->create();
+
+        $response = $this->post(route('item.like', $item->id));
+        $this->assertGuest();
+    }
 }

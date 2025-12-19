@@ -18,7 +18,7 @@ class Item extends Model
         'description',
         'img_url',
     ];
-
+    
     public function user()
     {
         return $this->belongsTo(User::class);
