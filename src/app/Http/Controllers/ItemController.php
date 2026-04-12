@@ -41,9 +41,12 @@ class ItemController extends Controller
 
     public function show($item_id)
     {
-        $item = Item::findOrFail($item_id);
+        $item = Item::with(['condition', 'categories', 'comments.user', 'likes', 'soldItem.user'])->findOrFail($item_id);
         $user = Auth::user();
+        $categories = $item->categories;
+        $trade = $item->soldItem;
+        $canOpenTrade = $trade && $user && $trade->isParticipant($user->id);
 
-        return view('item.show', compact('item', 'user'));
+        return view('item.show', compact('item', 'user', 'categories', 'trade', 'canOpenTrade'));
     }
 }

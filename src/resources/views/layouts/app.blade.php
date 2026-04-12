@@ -6,16 +6,15 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Coachtechフリマ</title>
     <link rel="stylesheet" href="https://unpkg.com/ress/dist/ress.min.css">
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}?v={{ filemtime(public_path('css/style.css')) }}">
 </head>
 <body>
     <header class="header">
         <div class="header__inner">
             <h1 class="header__logo">
-                 <h1 class="header__logo">
-                    <a href="/">COACHTECH</a>
-                 </h1>
-            
+                <a href="/">COACHTECH</a>
+            </h1>
+
             <form action="/" method="get" class="header__search">
                 @csrf
                 <input type="text" name="keyword" value="{{ request('keyword') }}" placeholder="なにをお探しですか？" class="header__search-input">

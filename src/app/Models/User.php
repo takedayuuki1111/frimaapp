@@ -41,6 +41,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(SoldItem::class);
     }
 
+    public function sellingTransactions()
+    {
+        return $this->hasManyThrough(SoldItem::class, Item::class, 'user_id', 'item_id');
+    }
+
     public function comments()
     {
         return $this->hasMany(Comment::class);
@@ -49,5 +54,34 @@ class User extends Authenticatable implements MustVerifyEmail
     public function likes()
     {
         return $this->hasMany(Like::class);
+    }
+
+    public function receivedRatings()
+    {
+        $sellerRatings = $this->sellingTransactions()
+            ->whereNotNull('seller_rating')
+            ->pluck('seller_rating');
+
+        $buyerRatings = $this->soldItems()
+            ->whereNotNull('buyer_rating')
+            ->pluck('buyer_rating');
+
+        return $sellerRatings->merge($buyerRatings);
+    }
+
+    public function averageRating(): ?float
+    {
+        $ratings = $this->receivedRatings();
+
+        if ($ratings->isEmpty()) {
+            return null;
+        }
+
+        return (float) round($ratings->avg());
+    }
+
+    public function ratingCount(): int
+    {
+        return $this->receivedRatings()->count();
     }
 }

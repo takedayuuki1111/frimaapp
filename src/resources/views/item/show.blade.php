@@ -41,7 +41,11 @@
             </div>
 
             @if ($item->isSold())
-                <button class="btn-purchase disabled" disabled>売り切れ</button>
+                @if (!empty($canOpenTrade))
+                    <a href="{{ route('trade.show', $trade) }}" class="btn-purchase">取引画面を開く</a>
+                @else
+                    <button class="btn-purchase disabled" disabled>売り切れ</button>
+                @endif
             @else
                 <a href="{{ route('purchase.create', $item->id) }}" class="btn-purchase">購入手続きへ</a>
             @endif

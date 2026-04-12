@@ -49,3 +49,37 @@ phpMyAdmin,http://localhost:8080/,DB確認用 (user: laravel_user / pass: larave
 ユーザー名,メールアドレス,パスワード
 テストユーザー,test@example.com,password123
 coachtech太郎,taro@example.com,password123
+サンプル花子,hanako@example.com,password123
+
+## ダミーデータ
+`docker-compose exec php php artisan migrate:fresh --seed` 実行後、以下の確認用データが入ります。
+
+### テストアカウント
+- `test@example.com` / `password123`
+- `taro@example.com` / `password123`
+- `hanako@example.com` / `password123`
+
+### 仕様書準拠の商品データ
+- 腕時計 / 15000円 / 良好
+- HDD / 5000円 / 目立った傷や汚れなし
+- 玉ねぎ3束 / 300円 / やや傷や汚れあり
+- 革靴 / 4000円 / 状態が悪い
+- ノートPC / 45000円 / 良好
+- マイク / 8000円 / 目立った傷や汚れなし
+- ショルダーバッグ / 3500円 / やや傷や汚れあり
+- タンブラー / 500円 / 状態が悪い
+- コーヒーミル / 4000円 / 良好
+- メイクセット / 2500円 / 目立った傷や汚れなし
+
+### 取引確認用データ
+- `test@example.com`
+  - 出品した商品あり
+  - 購入した商品あり
+  - `取引中の商品` タブに表示される取引データあり
+  - 評価データあり
+- `taro@example.com`
+  - 出品・購入・評価済み取引データあり
+- 取引チャット画面
+  - サンプルメッセージを複数件登録済み
+
+4/8 ダミーデータを仕様書準拠に再調整

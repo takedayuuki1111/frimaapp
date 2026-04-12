@@ -7,6 +7,7 @@ use App\Http\Controllers\SellController;
 use App\Http\Controllers\MypageController;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\LikeController;
+use App\Http\Controllers\TradeController;
 
 Route::get('/', [ItemController::class, 'index'])->name('index');
 
@@ -35,6 +36,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         
         Route::get('/profile', [MypageController::class, 'edit'])->name('mypage.edit');
         Route::post('/profile', [MypageController::class, 'update'])->name('mypage.update');
+    });
+
+    Route::prefix('trades')->name('trade.')->group(function () {
+        Route::get('/{soldItem}', [TradeController::class, 'show'])->name('show');
+        Route::post('/{soldItem}/messages', [TradeController::class, 'storeMessage'])->name('message.store');
+        Route::patch('/{soldItem}/messages/{tradeMessage}', [TradeController::class, 'updateMessage'])->name('message.update');
+        Route::delete('/{soldItem}/messages/{tradeMessage}', [TradeController::class, 'destroyMessage'])->name('message.destroy');
+        Route::post('/{soldItem}/complete', [TradeController::class, 'complete'])->name('complete');
+        Route::post('/{soldItem}/rate', [TradeController::class, 'rate'])->name('rate');
     });
 
     Route::post('/item/{item_id}/like', [LikeController::class, 'store'])->name('item.like');

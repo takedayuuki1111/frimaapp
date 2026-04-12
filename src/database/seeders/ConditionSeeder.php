@@ -18,7 +18,7 @@ class ConditionSeeder extends Seeder
         ];
 
         foreach ($conditions as $condition) {
-            Condition::create(['condition' => $condition]);
+            Condition::firstOrCreate(['condition' => $condition]);
         }
     }
 }

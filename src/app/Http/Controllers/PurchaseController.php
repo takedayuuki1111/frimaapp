@@ -15,14 +15,20 @@ class PurchaseController extends Controller
 {
     public function create($item_id)
     {
-        $item = Item::findOrFail($item_id);
+        $item = Item::with('soldItem')->findOrFail($item_id);
 
-        if ($item->user_id === Auth::id()) {
-            return redirect()->route('index'); 
+        if ((int) $item->user_id === (int) Auth::id()) {
+            return redirect()->route('index');
         }
 
         if ($item->isSold()) {
-            return redirect()->route('index'); 
+            $soldItem = $item->soldItem;
+
+            if ($soldItem && ((int) $soldItem->user_id === (int) Auth::id() || (int) $item->user_id === (int) Auth::id())) {
+                return redirect()->route('trade.show', $soldItem);
+            }
+
+            return redirect()->route('index');
         }
 
         $user = Auth::user();
@@ -32,7 +38,11 @@ class PurchaseController extends Controller
     
     public function store(PurchaseRequest $request, $item_id)
     {
-        $item = Item::findOrFail($item_id);
+        $item = Item::with('soldItem')->findOrFail($item_id);
+
+        if ((int) $item->user_id === (int) Auth::id() || $item->isSold()) {
+            return redirect()->route('index');
+        }
 
         if ($request->payment_method === 'card') {
             Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
@@ -58,8 +68,9 @@ class PurchaseController extends Controller
         }
 
         if ($request->payment_method === 'konbini') {
-            $this->processPurchase($item->id, 'konbini');
-            return redirect()->route('index');
+            $soldItem = $this->processPurchase($item->id);
+
+            return redirect()->route('trade.show', $soldItem);
         }
 
         return redirect()->route('index');
@@ -67,9 +78,9 @@ class PurchaseController extends Controller
 
     public function success($item_id)
     {
-        $this->processPurchase($item_id, 'card');
+        $soldItem = $this->processPurchase($item_id);
 
-        return redirect()->route('index');
+        return redirect()->route('trade.show', $soldItem);
     }
 
     public function cancel($item_id)
@@ -77,17 +88,32 @@ class PurchaseController extends Controller
         return redirect()->route('purchase.create', ['item_id' => $item_id]);
     }
 
-    private function processPurchase($item_id, $method)
+    private function processPurchase($item_id)
     {
-        SoldItem::create([
-            'user_id' => Auth::id(),
-            'item_id' => $item_id,
-        ]);
+        $soldItem = SoldItem::firstOrCreate(
+            ['item_id' => $item_id],
+            [
+                'user_id' => Auth::id(),
+                'status' => 'trading',
+            ]
+        );
+
+        if (is_null($soldItem->status)) {
+            $soldItem->update(['status' => 'trading']);
+        }
+
+        if ($soldItem->messages()->doesntExist()) {
+            $soldItem->messages()->create([
+                'user_id' => Auth::id(),
+                'message' => '購入が完了しました。よろしくお願いします。',
+            ]);
+        }
+
+        return $soldItem;
     }
 
     public function editAddress($item_id)
     {
-        $item = Item::findOrFail($item_id);
         return view('purchase.address', compact('item_id'));
     }
 

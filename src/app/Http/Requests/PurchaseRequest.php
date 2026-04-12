@@ -14,7 +14,7 @@ class PurchaseRequest extends FormRequest
     public function rules()
     {
         return [
-            'payment_method' => 'required', 
+            'payment_method' => 'required|in:konbini,card', 
             'item_id' => 'required|exists:items,id', 
         ];
     }
