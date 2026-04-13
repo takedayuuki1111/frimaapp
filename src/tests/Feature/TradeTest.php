@@ -235,6 +235,7 @@ class TradeTest extends TestCase
 
         $response->assertOk();
         $response->assertSee('新着2件');
+        $response->assertSee('trade-card-alert-dot', false);
 
         $html = $response->getContent();
         $this->assertTrue(
@@ -269,7 +270,7 @@ class TradeTest extends TestCase
         });
     }
 
-    public function test_completed_trade_is_not_shown_in_trading_items_tab(): void
+    public function test_completed_trade_waiting_for_seller_rating_is_shown_in_trade_tab(): void
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
@@ -288,10 +289,39 @@ class TradeTest extends TestCase
             ->post(route('trade.complete', $soldItem))
             ->assertRedirect(route('trade.show', $soldItem));
 
-        $response = $this->actingAs($buyer)->get('/mypage?page=trade');
+        $response = $this->actingAs($seller)->get('/mypage?page=trade');
 
         $response->assertOk();
-        $response->assertDontSee('完了済みになった商品');
+        $response->assertSee('完了済みになった商品');
+        $response->assertSee('取引画面を開く');
+        $response->assertSee('trade-card-alert-dot', false);
+    }
+
+    public function test_completed_trade_disappears_from_trade_tab_after_seller_rates(): void
+    {
+        $seller = User::factory()->create();
+        $buyer = User::factory()->create();
+        $item = Item::factory()->create([
+            'user_id' => $seller->id,
+            'name' => '評価後に消える商品',
+        ]);
+
+        $soldItem = SoldItem::create([
+            'user_id' => $buyer->id,
+            'item_id' => $item->id,
+            'status' => 'completed',
+            'seller_rating' => 5,
+            'buyer_rating' => null,
+        ]);
+
+        $this->actingAs($seller)
+            ->post(route('trade.rate', $soldItem), ['score' => 4])
+            ->assertRedirect(route('index'));
+
+        $response = $this->actingAs($seller)->get('/mypage?page=trade');
+
+        $response->assertOk();
+        $response->assertDontSee('評価後に消える商品');
     }
 
     public function test_completed_trade_screen_shows_rating_modal_trigger_with_five_stars(): void

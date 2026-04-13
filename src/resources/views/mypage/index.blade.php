@@ -43,10 +43,25 @@
             @php
                 $trade = $tradesByItemId->get($item->id);
                 $unreadCount = $trade ? ($unreadCountsByItemId->get($item->id) ?? 0) : 0;
+                $hasPendingRating = false;
+
+                if ($trade) {
+                    $hasPendingRating = $trade->status === 'completed'
+                        && (
+                            ((int) $trade->user_id === (int) $user->id && is_null($trade->seller_rating))
+                            || ((int) $trade->item->user_id === (int) $user->id && is_null($trade->buyer_rating))
+                        );
+                }
+
+                $showTradeAlert = $trade && ($unreadCount > 0 || $hasPendingRating);
             @endphp
             <div class="item-card">
                 <a href="{{ $page === 'trade' && $trade ? route('trade.show', $trade) : route('item.show', ['item_id' => $item->id]) }}" class="item-link">
                     <div class="item-img-wrapper">
+                        @if ($page === 'trade' && $showTradeAlert)
+                            <span class="trade-card-alert-dot" aria-label="要確認の取引"></span>
+                        @endif
+
                         @if (str_starts_with($item->img_url, 'http'))
                             <img src="{{ $item->img_url }}" alt="{{ $item->name }}" class="item-img">
                         @else

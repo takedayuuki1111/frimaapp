@@ -19,7 +19,23 @@ class MypageController extends Controller
         }
 
         $tradeRecords = SoldItem::with(['item.user', 'messages'])
-            ->where('status', 'trading')
+            ->where(function ($query) use ($user) {
+                $query->where('status', 'trading')
+                    ->orWhere(function ($completedQuery) use ($user) {
+                        $completedQuery->where('status', 'completed')
+                            ->where(function ($pendingRatingQuery) use ($user) {
+                                $pendingRatingQuery->where(function ($buyerQuery) use ($user) {
+                                    $buyerQuery->where('user_id', $user->id)
+                                        ->whereNull('seller_rating');
+                                })->orWhere(function ($sellerQuery) use ($user) {
+                                    $sellerQuery->whereNull('buyer_rating')
+                                        ->whereHas('item', function ($itemQuery) use ($user) {
+                                            $itemQuery->where('user_id', $user->id);
+                                        });
+                                });
+                            });
+                    });
+            })
             ->where(function ($query) use ($user) {
                 $query->where('user_id', $user->id)
                     ->orWhereHas('item', function ($itemQuery) use ($user) {

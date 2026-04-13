@@ -72,7 +72,7 @@
 
                         @if ($message->user_id === $currentUser->id)
                             <div class="trade-message-actions">
-                                <a href="{{ route('trade.show', ['soldItem' => $soldItem, 'edit' => $message->id]) }}" class="trade-sidebar-link">編集</a>
+                                <a href="{{ route('trade.show', ['soldItem' => $soldItem, 'edit' => $message->id]) }}" class="btn-trade-edit">編集</a>
                                 <form action="{{ route('trade.message.destroy', [$soldItem, $message]) }}" method="post">
                                     @csrf
                                     @method('DELETE')
