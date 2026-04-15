@@ -75,7 +75,7 @@ class TradeTest extends TestCase
 
         $screen = $this->actingAs($seller)->get(route('trade.show', $soldItem));
         $screen->assertOk();
-        $screen->assertSee('取引チャット');
+        $screen->assertSee('さんとの取引画面');
         $screen->assertSee('よろしくお願いします。');
     }
 
@@ -143,6 +143,7 @@ class TradeTest extends TestCase
         $screen = $this->actingAs($buyer)->get(route('trade.show', $soldItem));
         $screen->assertSee('本文は400文字以内で入力してください');
         $screen->assertSee('「.png」または「.jpeg」形式でアップロードしてください');
+        $screen->assertDontSee('accept="image/*"', false);
         $screen->assertSee(str_repeat('あ', 20));
     }
 
@@ -236,8 +237,14 @@ class TradeTest extends TestCase
         $response->assertOk();
         $response->assertSee('新着2件');
         $response->assertSee('trade-card-alert-dot', false);
+        $response->assertSee('trade-tab-notice', false);
+        $response->assertSee('trade-card-image-badge', false);
 
         $html = $response->getContent();
+        $this->assertTrue(
+            substr_count($html, '新着2件') >= 2,
+            'Unread count should be visible in the tab area and on the trade card.'
+        );
         $this->assertTrue(
             strpos($html, '新着の取引商品') < strpos($html, '古い取引商品'),
             'Unread trade should appear before the older trade.'
@@ -324,7 +331,7 @@ class TradeTest extends TestCase
         $response->assertDontSee('評価後に消える商品');
     }
 
-    public function test_completed_trade_screen_shows_rating_modal_trigger_with_five_stars(): void
+    public function test_completed_trade_screen_auto_opens_rating_modal_with_five_stars(): void
     {
         $seller = User::factory()->create();
         $buyer = User::factory()->create();
@@ -339,9 +346,8 @@ class TradeTest extends TestCase
         $response = $this->actingAs($buyer)->get(route('trade.show', $soldItem));
 
         $response->assertOk();
-        $response->assertSee('評価する');
-        $response->assertSee('trade-rating-modal');
-        $response->assertSee('☆1');
-        $response->assertSee('☆5');
+        $response->assertDontSee('評価する');
+        $response->assertSee('trade-rating-modal is-open', false);
+        $response->assertSee('送信する');
     }
 }

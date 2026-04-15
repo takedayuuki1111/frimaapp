@@ -35,7 +35,12 @@
     <div class="tab-menu">
         <a href="/mypage?page=sell" class="tab-item {{ $page === 'sell' ? 'active' : '' }}">出品した商品 ({{ $sellCount }})</a>
         <a href="/mypage?page=buy" class="tab-item {{ $page === 'buy' ? 'active' : '' }}">購入した商品 ({{ $buyCount }})</a>
-        <a href="/mypage?page=trade" class="tab-item {{ $page === 'trade' ? 'active' : '' }}">取引中の商品 ({{ $tradingCount }})</a>
+        <a href="/mypage?page=trade" class="tab-item {{ $page === 'trade' ? 'active' : '' }}">
+            取引中の商品 ({{ $tradingCount }})
+            @if ($unreadTradeCount > 0)
+                <span class="trade-tab-notice">新着{{ $unreadTradeCount }}件</span>
+            @endif
+        </a>
     </div>
 
     <div class="item-grid">
@@ -60,6 +65,9 @@
                     <div class="item-img-wrapper">
                         @if ($page === 'trade' && $showTradeAlert)
                             <span class="trade-card-alert-dot" aria-label="要確認の取引"></span>
+                            @if ($unreadCount > 0)
+                                <span class="trade-card-image-badge">新着{{ $unreadCount }}件</span>
+                            @endif
                         @endif
 
                         @if (str_starts_with($item->img_url, 'http'))

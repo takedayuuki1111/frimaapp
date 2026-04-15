@@ -57,6 +57,7 @@ class MypageController extends Controller
         $sellCount = $user->items()->count();
         $buyCount = $user->soldItems()->count();
         $tradingCount = $tradeRecords->count();
+        $unreadTradeCount = $tradeRecords->sum(fn ($trade) => $trade->unreadCountForUser($user->id));
         $tradesByItemId = $tradeRecords->keyBy('item_id');
         $unreadCountsByItemId = $tradeRecords->mapWithKeys(function ($trade) use ($user) {
             return [$trade->item_id => $trade->unreadCountForUser($user->id)];
@@ -71,6 +72,7 @@ class MypageController extends Controller
             'sellCount',
             'buyCount',
             'tradingCount',
+            'unreadTradeCount',
             'tradesByItemId',
             'unreadCountsByItemId',
             'averageRating',
